@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario CUCRA-24 - Uso del Celular y Rendimiento Académico</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; color: black; }
+            .shadow-lg, .shadow-md, .shadow-sm { box-shadow: none !important; }
+            .border { border-color: #cbd5e1 !important; }
+        }
+        .print-only { display: none; }
+        
+        /* Modal Animation */
+        .modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Principal (Diseño Médico/Académico) -->
+    <header class="bg-gradient-to-r from-slate-900 via-sky-950 to-indigo-950 text-white shadow-lg no-print">
+        <div class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3.5">
+                <div class="p-3 bg-sky-500/20 rounded-xl backdrop-blur-md border border-sky-400/30">
+                    <i data-lucide="smartphone" class="w-8 h-8 text-sky-400"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">Cuestionario CUCRA-24</h1>
+                    <p class="text-xs sm:text-sm text-sky-200/90">Uso del Celular y Rendimiento Académico en Estudiantes de Fisioterapia</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800/80 px-3.5 py-2 rounded-xl border border-sky-500/30 text-xs font-medium text-sky-200">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Evaluación Confidencial & Académica</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow w-full">
+
+        <!-- Navigation Steps Bar -->
+        <nav class="mb-8 no-print">
+            <ol class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <li id="step-tab-1" class="step-tab bg-white p-4 rounded-xl shadow-sm border-2 border-sky-600 flex items-center gap-3 transition-all cursor-pointer" onclick="switchSection(1)">
+                    <span class="step-num w-8 h-8 rounded-full bg-sky-600 text-white font-semibold flex items-center justify-center text-sm">1</span>
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Apartado 1</p>
+                        <p class="text-sm font-bold text-slate-800">Datos Personales</p>
+                    </div>
+                </li>
+                <li id="step-tab-2" class="step-tab bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3 transition-all cursor-pointer" onclick="switchSection(2)">
+                    <span class="step-num w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-semibold flex items-center justify-center text-sm">2</span>
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Apartado 2</p>
+                        <p class="text-sm font-bold text-slate-800">Criterios Elegibilidad</p>
+                    </div>
+                </li>
+                <li id="step-tab-3" class="step-tab opacity-60 bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between gap-3 transition-all cursor-not-allowed">
+                    <div class="flex items-center gap-3">
+                        <span class="step-num w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-semibold flex items-center justify-center text-sm">3</span>
+                        <div>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Apartado 3</p>
+                            <p class="text-sm font-bold text-slate-800">Cuestionario CUCRA-24</p>
+                        </div>
+                    </div>
+                    <i id="lock-icon" data-lucide="lock" class="w-4 h-4 text-amber-500"></i>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Dynamic Content Panels -->
+        <div id="content-area">
+
+            <!-- APARTADO 1: DATOS PERSONALES -->
+            <section id="section-1" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="user" class="text-sky-600"></i> Apartado 1: Datos Personales
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-1">Por favor ingrese su información sociodemográfica básica para fines de investigación.</p>
+                </div>
+
+                <form id="form-personal-data" class="grid grid-cols-1 md:grid-cols-2 gap-6" onsubmit="event.preventDefault(); switchSection(2);">
+                    <div class="md:col-span-2">
+                        <label for="fullName" class="block text-sm font-medium text-slate-700 mb-1">Apellidos y Nombres Completo <span class="text-rose-500">*</span></label>
+                        <input type="text" id="fullName" required placeholder="Ej. Pérez Gómez, María Elena" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm">
+                    </div>
+
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-slate-700 mb-1">Edad (años) <span class="text-rose-500">*</span></label>
+                        <input type="number" id="age" min="15" max="80" required placeholder="Ej. 21" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm">
+                    </div>
+
+                    <div>
+                        <label for="academicCycle" class="block text-sm font-medium text-slate-700 mb-1">Ciclo de Estudio <span class="text-rose-500">*</span></label>
+                        <select id="academicCycle" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm bg-white">
+                            <option value="" disabled selected>Seleccione ciclo...</option>
+                            <option value="1">1° Ciclo</option>
+                            <option value="2">2° Ciclo</option>
+                            <option value="3">3° Ciclo</option>
+                            <option value="4">4° Ciclo</option>
+                            <option value="5">5° Ciclo</option>
+                            <option value="6">6° Ciclo</option>
+                            <option value="7">7° Ciclo</option>
+                            <option value="8">8° Ciclo</option>
+                            <option value="9">9° Ciclo</option>
+                            <option value="10">10° Ciclo</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2 flex justify-end pt-4">
+                        <button type="submit" class="bg-sky-700 hover:bg-sky-800 text-white font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow">
+                            <span>Siguiente: Criterios</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- APARTADO 2: CRITERIOS DE INCLUSIÓN Y EXCLUSIÓN -->
+            <section id="section-2" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="clipboard-check" class="text-sky-600"></i> Apartado 2: Criterios de Inclusión y Exclusión
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-1">Responda con honestidad las siguientes preguntas para verificar si califica para responder el cuestionario.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Pregunta 1 -->
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <p class="font-medium text-slate-800 text-sm sm:text-base">1. ¿Eres estudiante de la carrera de Fisioterapia?</p>
+                        <div class="flex items-center gap-6">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_physio" value="SI" class="w-4 h-4 text-sky-600 focus:ring-sky-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">Sí</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_physio" value="NO" class="w-4 h-4 text-rose-600 focus:ring-rose-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <p class="font-medium text-slate-800 text-sm sm:text-base">2. ¿Has tenido alguna lesión dentro de los últimos 6 meses que genere incapacidad (fracturas, cirugías, roturas de ligamentos y desgarros musculares)?</p>
+                        <div class="flex items-center gap-6">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_injury" value="SI" class="w-4 h-4 text-rose-600 focus:ring-rose-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">Sí</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_injury" value="NO" class="w-4 h-4 text-sky-600 focus:ring-sky-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <p class="font-medium text-slate-800 text-sm sm:text-base">3. ¿Presentas trastorno genético de Síndrome de Klippel-Feil?</p>
+                        <div class="flex items-center gap-6">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_klippel" value="SI" class="w-4 h-4 text-rose-600 focus:ring-rose-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">Sí</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_klippel" value="NO" class="w-4 h-4 text-sky-600 focus:ring-sky-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner de Bloqueo por Criterios de Exclusión -->
+                <div id="exclusion-banner" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 space-y-2">
+                    <div class="flex items-center gap-2 font-bold text-amber-800">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
+                        <span>Acceso Restringido al Cuestionario CUCRA-24</span>
+                    </div>
+                    <p class="text-sm text-amber-800/90 leading-relaxed" id="exclusion-reason">
+                        Usted no cumple con los criterios de inclusión requeridos para esta investigación o presenta alguno de los criterios de exclusión declarados.
+                    </p>
+                </div>
+
+                <div class="flex justify-between items-center pt-4">
+                    <button type="button" onclick="switchSection(1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-5 py-2.5 rounded-lg transition-all flex items-center gap-2">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span>Anterior</span>
+                    </button>
+                    
+                    <button id="btn-to-cuestionario" type="button" disabled onclick="switchSection(3)" class="bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed">
+                        <span>Iniciar Cuestionario</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- APARTADO 3: CUESTIONARIO CUCRA-24 -->
+            <section id="section-3" class="hidden space-y-8">
+                <!-- Header del cuestionario -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-4">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="file-text" class="text-sky-600"></i> Apartado 3: Cuestionario CUCRA-24
+                            </h2>
+                            <p class="text-sm text-slate-500 mt-1">Lea atentamente cada ítem e indique con qué frecuencia realiza o experimenta las siguientes situaciones.</p>
+                        </div>
+                        <div class="bg-sky-50 border border-sky-200 p-3 rounded-xl text-xs text-sky-900 flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-sky-600 shrink-0"></i>
+                            <span>Escala Likert: 1 = Nunca, 2 = Casi nunca, 3 = A veces, 4 = Casi siempre, 5 = Siempre</span>
+                        </div>
+                    </div>
+
+                    <!-- Progreso -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold text-slate-600">
+                            <span>Progreso del Cuestionario</span>
+                            <span id="progress-percentage">0% (0/24)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="bg-sky-600 h-full transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario CUCRA-24 Items -->
+                <form id="form-cucra" class="space-y-6" onsubmit="event.preventDefault(); calculateResults();">
+                    
+                    <!-- Subescala 1 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+                        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-sky-900 flex items-center gap-2">
+                                <i data-lucide="smartphone" class="w-5 h-5 text-sky-600"></i> Dimensión 1: Uso Dependiente del Celular
+                            </h3>
+                            <span class="text-xs font-medium px-2.5 py-1 bg-sky-100 text-sky-800 rounded-full">Ítems 1 al 12</span>
+                        </div>
+                        <div class="space-y-6" id="dimension-1-container">
+                            <!-- Items 1 to 12 rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Subescala 2 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+                        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
+                                <i data-lucide="graduation-cap" class="w-5 h-5 text-indigo-600"></i> Dimensión 2: Impacto en el Rendimiento Académico
+                            </h3>
+                            <span class="text-xs font-medium px-2.5 py-1 bg-indigo-100 text-indigo-800 rounded-full">Ítems 13 al 24</span>
+                        </div>
+                        <div class="space-y-6" id="dimension-2-container">
+                            <!-- Items 13 to 24 rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN ADICIONAL: TIEMPO DE USO DEL CELULAR -->
+                    <div class="bg-white rounded-2xl shadow-sm border-2 border-sky-500/30 p-6 space-y-6">
+                        <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-5 h-5 text-sky-600"></i> Tiempo de Uso del Celular
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-1">Indique el promedio de tiempo diario que utiliza su teléfono celular en pantalla activa.</p>
+                            </div>
+                            
+                            <!-- Botón para abrir la Guía en Modal -->
+                            <button type="button" onclick="openGuideModal()" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-2 shrink-0 shadow-sm">
+                                <i data-lucide="help-circle" class="w-4 h-4 text-sky-600"></i>
+                                <span>📱 ¿Cómo ver mi tiempo de uso?</span>
+                            </button>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
+                            <label class="block text-sm font-semibold text-slate-800">
+                                ¿Cuánto tiempo al día usas el celular? <span class="text-rose-500">*</span>
+                            </label>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
+                                <div>
+                                    <label for="useHours" class="block text-xs font-medium text-slate-600 mb-1">Horas por día</label>
+                                    <div class="relative">
+                                        <input type="number" id="useHours" min="0" max="24" required placeholder="0 - 24" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm pr-12">
+                                        <span class="absolute right-3 top-2.5 text-xs font-semibold text-slate-400">hrs</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="useMinutes" class="block text-xs font-medium text-slate-600 mb-1">Minutos por día</label>
+                                    <div class="relative">
+                                        <input type="number" id="useMinutes" min="0" max="59" required placeholder="0 - 59" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm pr-12">
+                                        <span class="absolute right-3 top-2.5 text-xs font-semibold text-slate-400">min</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón para Procesar -->
+                    <div class="flex justify-between items-center pt-4">
+                        <button type="button" onclick="switchSection(2)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-5 py-2.5 rounded-lg transition-all flex items-center gap-2">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            <span>Anterior</span>
+                        </button>
+                        
+                        <button type="submit" class="bg-sky-800 hover:bg-sky-900 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            <span>Calcular y Ver Resultados</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- RESULTADOS Y REPORTE -->
+                <div id="results-container" class="hidden bg-white rounded-2xl shadow-lg border border-sky-100 p-6 sm:p-8 space-y-8">
+                    <div class="border-b border-slate-200 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Informe Final de Evaluación</span>
+                            <h2 class="text-2xl font-bold text-slate-900">Resultados CUCRA-24</h2>
+                        </div>
+                        <div class="flex items-center gap-2 no-print">
+                            <button onclick="exportCSV()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition">
+                                <i data-lucide="download" class="w-4 h-4"></i> Exportar CSV
+                            </button>
+                            <button onclick="window.print()" class="bg-sky-800 hover:bg-sky-900 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition shadow">
+                                <i data-lucide="printer" class="w-4 h-4"></i> Imprimir / Guardar PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Resumen del Evaluado -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <span class="text-slate-500 block text-xs">Estudiante</span>
+                            <strong id="res-name" class="text-slate-800">-</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block text-xs">Edad / Ciclo</span>
+                            <strong id="res-age-cycle" class="text-slate-800">-</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block text-xs">Carrera</span>
+                            <strong class="text-sky-700 font-semibold">Fisioterapia</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block text-xs">Uso Diario Registrado</span>
+                            <strong id="res-screen-time" class="text-slate-900 font-bold text-sky-800">-</strong>
+                        </div>
+                    </div>
+
+                    <!-- Score Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Score Total -->
+                        <div class="bg-gradient-to-br from-sky-50 to-indigo-50 p-5 rounded-xl border border-sky-200 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold uppercase text-sky-800">Puntaje Total CUCRA-24</span>
+                                <i data-lucide="bar-chart-3" class="w-5 h-5 text-sky-600"></i>
+                            </div>
+                            <div class="text-3xl font-extrabold text-sky-950 my-1" id="total-score">0 / 120</div>
+                            <span id="score-level-badge" class="inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-sky-200 text-sky-900">
+                                Evaluando...
+                            </span>
+                        </div>
+
+                        <!-- Subescala 1 -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold uppercase text-slate-600">Uso Dependiente del Celular</span>
+                                <i data-lucide="smartphone" class="w-5 h-5 text-slate-500"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-slate-800 my-1" id="dim1-score">0 / 60</div>
+                            <p class="text-xs text-slate-500">Dimensión 1 (Ítems 1-12)</p>
+                        </div>
+
+                        <!-- Subescala 2 -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold uppercase text-slate-600">Afección del Rendimiento Académico</span>
+                                <i data-lucide="book-open" class="w-5 h-5 text-slate-500"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-slate-800 my-1" id="dim2-score">0 / 60</div>
+                            <p class="text-xs text-slate-500">Dimensión 2 (Ítems 13-24)</p>
+                        </div>
+                    </div>
+
+                    <!-- Interpretación Clínica / Académica -->
+                    <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                            <i data-lucide="file-check-2" class="w-4 h-4 text-sky-600"></i>
+                            Diagnóstico Interpretativo:
+                        </h4>
+                        <p class="text-sm text-slate-700 leading-relaxed" id="interpretation-text">
+                            -
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MODAL INTERACTIVO: GUÍA PASO A PASO PARA VER TIEMPO EN PANTALLA -->
+    <div id="guide-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop no-print">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden transform transition-all">
+            <!-- Modal Header -->
+            <div class="bg-slate-900 text-white p-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-sky-500/20 rounded-lg">
+                        <i data-lucide="smartphone" class="w-6 h-6 text-sky-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">Guía: Tiempo de Uso del Celular</h3>
+                        <p class="text-xs text-slate-300">Consulte cómo verificar las horas diarias en su dispositivo</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeGuideModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Tabs de Plataforma -->
+            <div class="flex border-b border-slate-200 bg-slate-50">
+                <button type="button" id="tab-android" onclick="switchGuideTab('android')" class="flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-sky-600 text-sky-700 bg-white">
+                    <i data-lucide="bot" class="w-4 h-4 text-emerald-600"></i>
+                    <span>Android (Bienestar Digital)</span>
+                </button>
+                <button type="button" id="tab-ios" onclick="switchGuideTab('ios')" class="flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800">
+                    <i data-lucide="apple" class="w-4 h-4 text-slate-800"></i>
+                    <span>Apple iOS (Tiempo en Pantalla)</span>
+                </button>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div class="p-6 space-y-6">
+                <!-- GUÍA ANDROID -->
+                <div id="guide-android" class="space-y-4">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center gap-3 text-xs text-emerald-800">
+                        <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0"></i>
+                        <span>En Android esta función se denomina <strong>"Bienestar Digital y Controles Parentales"</strong>.</span>
+                    </div>
+
+                    <ol class="space-y-3 text-sm text-slate-700">
+                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Abra la aplicación Ajustes o Configuración</p>
+                                <p class="text-xs text-slate-500">Busque el icono del engranaje en su pantalla de inicio.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Seleccione 'Bienestar Digital y controles parentales'</p>
+                                <p class="text-xs text-slate-500">En Samsung, Xiaomi, Motorola u otros modelos se encuentra listado en el menú principal de ajustes.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Consulte el gráfico circular o panel de tiempo</p>
+                                <p class="text-xs text-slate-500">Aparecerá el tiempo total en pantalla acumulado hoy (ej. 5 h 35 min) o el promedio diario semanal.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- GUÍA APPLE iOS -->
+                <div id="guide-ios" class="hidden space-y-4">
+                    <div class="bg-sky-50 border border-sky-200 rounded-xl p-3 flex items-center gap-3 text-xs text-sky-800">
+                        <i data-lucide="info" class="w-5 h-5 text-sky-600 shrink-0"></i>
+                        <span>En iPhone / iPad esta función se denomina <strong>"Tiempo en Pantalla" (Screen Time)</strong>.</span>
+                    </div>
+
+                    <ol class="space-y-3 text-sm text-slate-700">
+                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Ingresé a 'Ajustes' / 'Configuración'</p>
+                                <p class="text-xs text-slate-500">Acceda al menú general de su iPhone.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Seleccione la opción 'Tiempo en Pantalla'</p>
+                                <p class="text-xs text-slate-500">Identificada con el icono de un reloj de arena púrpura.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
+                            <div>
+                                <p class="font-semibold text-slate-900">Presione 'Ver toda la actividad'</p>
+                                <p class="text-xs text-slate-500">Podrá consultar su promedio diario en Horas y Minutos del día actual o de la última semana.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end">
+                <button type="button" onclick="closeGuideModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition">
+                    Entendido, regresar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8 no-print">
+        <div class="max-w-5xl mx-auto px-4 text-center text-xs text-slate-500">
+            Cuestionario de Uso del Celular y Rendimiento Académico en Estudiantes (CUCRA-24) &copy; 2026
+        </div>
+    </footer>
+
+    <!-- Scripts de Lógica -->
+    <script>
+        // Preguntas estandarizadas CUCRA-24
+        const questionsCUCRA = [
+            // Dimensión 1: Uso Dependiente del Celular (1 - 12)
+            { id: 1, dim: 1, text: "1. Siento la necesidad constante de revisar mi celular durante el día." },
+            { id: 2, dim: 1, text: "2. Utilizo el celular por más tiempo del que tenía planificado inicialmente." },
+            { id: 3, dim: 1, text: "3. Me siento ansioso/a o inquieto/a cuando olvido o no puedo usar mi celular." },
+            { id: 4, dim: 1, text: "4. Intento reducir el tiempo de uso de mi celular pero no lo logro." },
+            { id: 5, dim: 1, text: "5. Reviso las notificaciones de mi celular inmediatamente al sonar o vibrar." },
+            { id: 6, dim: 1, text: "6. Uso el celular altas horas de la noche restándole tiempo a mi descanso habitual." },
+            { id: 7, dim: 1, text: "7. Siento ganas de mirar el celular incluso mientras realizo actividades importantes." },
+            { id: 8, dim: 1, text: "8. Mis familiares o amigos se han quejado de que paso demasiado tiempo con el celular." },
+            { id: 9, dim: 1, text: "9. Lo primero que hago al despertar e inmediatamente antes de dormir es mirar mi celular." },
+            { id: 10, dim: 1, text: "10. Utilizo el teléfono móvil para evadir preocupaciones o estados de ánimo bajos." },
+            { id: 11, dim: 1, text: "11. Siento pánico o malestar extremo si me quedo sin batería o señal de internet." },
+            { id: 12, dim: 1, text: "12. Pierdo la noción del tiempo fácilmente cuando estoy navegando en redes sociales con mi celular." },
+
+            // Dimensión 2: Impacto en el Rendimiento Académico (13 - 24)
+            { id: 13, dim: 2, text: "13. Me distraigo usando el celular mientras escucho mis clases presenciales o virtuales." },
+            { id: 14, dim: 2, text: "14. Dejo de lado el estudio o tareas por estar respondiendo mensajes o navegando en el celular." },
+            { id: 15, dim: 2, text: "15. Siento que mi capacidad de concentración en los exámenes se ve perjudicada por el celular." },
+            { id: 16, dim: 2, text: "16. Reviso las redes sociales o chats mientras ejecuto prácticas o tareas académicas." },
+            { id: 17, dim: 2, text: "17. Considero que el uso excesivo del celular ha disminuido mi promedio o rendimiento académico." },
+            { id: 18, dim: 2, text: "18. Olvido cumplir con fechas límite de entrega de trabajos académicos por distraerme con el móvil." },
+            { id: 19, dim: 2, text: "19. Me cuesta mantener la atención continuada en una lectura académica debido a la interrupción del celular." },
+            { id: 20, dim: 2, text: "20. Me desvelo usando el celular y al día siguiente rindo mal o me duermo en las clases." },
+            { id: 21, dim: 2, text: "21. Prefiero estar con el teléfono móvil que participar activamente en grupos de estudio." },
+            { id: 22, dim: 2, text: "22. Siento fatiga o cansancio mental durante las horas de clase por usar el móvil antes de dormir." },
+            { id: 23, dim: 2, text: "23. Me resulta difícil retener la información explicada por el docente por revisar constantemente el móvil." },
+            { id: 24, dim: 2, text: "24. Interrumpo mi preparación para evaluaciones académicas para consultar el celular sin necesidad." }
+        ];
+
+        let currentSection = 1;
+        let isEligible = false;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderQuestions();
+            lucide.createIcons();
+        });
+
+        // Renderizado dinámico de preguntas
+        function renderQuestions() {
+            const container1 = document.getElementById('dimension-1-container');
+            const container2 = document.getElementById('dimension-2-container');
+
+            container1.innerHTML = '';
+            container2.innerHTML = '';
+
+            questionsCUCRA.forEach((q) => {
+                const itemHTML = `
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
+                        <p class="font-medium text-slate-800 text-sm leading-relaxed">${q.text}</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
+                            ${[
+                                { val: 1, label: 'Nunca' },
+                                { val: 2, label: 'Casi nunca' },
+                                { val: 3, label: 'A veces' },
+                                { val: 4, label: 'Casi siempre' },
+                                { val: 5, label: 'Siempre' }
+                            ].map(opt => `
+                                <label class="flex items-center justify-center p-2 rounded-lg border border-slate-200 bg-white hover:bg-sky-50 hover:border-sky-300 cursor-pointer text-xs transition">
+                                    <input type="radio" name="q_${q.id}" value="${opt.val}" required class="w-3.5 h-3.5 text-sky-600 focus:ring-sky-500 mr-1.5" onchange="updateProgress()">
+                                    <span class="text-slate-700">${opt.label}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                if (q.dim === 1) {
+                    container1.innerHTML += itemHTML;
+                } else {
+                    container2.innerHTML += itemHTML;
+                }
+            });
+        }
+
+        // Navegación entre apartados
+        function switchSection(targetSection) {
+            if (targetSection === 3 && !isEligible) {
+                return;
+            }
+
+            if (targetSection > 1) {
+                const name = document.getElementById('fullName').value;
+                const age = document.getElementById('age').value;
+                const cycle = document.getElementById('academicCycle').value;
+
+                if (!name || !age || !cycle) {
+                    alert('Por favor complete todos los datos personales en el Apartado 1.');
+                    switchSection(1);
+                    return;
+                }
+            }
+
+            currentSection = targetSection;
+
+            document.getElementById('section-1').classList.add('hidden');
+            document.getElementById('section-2').classList.add('hidden');
+            document.getElementById('section-3').classList.add('hidden');
+
+            document.getElementById(`section-${targetSection}`).classList.remove('hidden');
+
+            for (let i = 1; i <= 3; i++) {
+                const tab = document.getElementById(`step-tab-${i}`);
+                if (i === targetSection) {
+                    tab.className = "step-tab bg-white p-4 rounded-xl shadow-sm border-2 border-sky-600 flex items-center gap-3 transition-all cursor-pointer";
+                } else {
+                    tab.className = "step-tab bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3 transition-all cursor-pointer";
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Evaluación de Criterios de Inclusión / Exclusión
+        function evaluateCriteria() {
+            const physio = document.querySelector('input[name="criteria_physio"]:checked')?.value;
+            const injury = document.querySelector('input[name="criteria_injury"]:checked')?.value;
+            const klippel = document.querySelector('input[name="criteria_klippel"]:checked')?.value;
+
+            const banner = document.getElementById('exclusion-banner');
+            const reasonText = document.getElementById('exclusion-reason');
+            const btnToCuestionario = document.getElementById('btn-to-cuestionario');
+            const tab3 = document.getElementById('step-tab-3');
+            const lockIcon = document.getElementById('lock-icon');
+
+            if (!physio || !injury || !klippel) {
+                isEligible = false;
+                banner.classList.add('hidden');
+                btnToCuestionario.disabled = true;
+                btnToCuestionario.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
+                return;
+            }
+
+            let reasons = [];
+
+            if (physio === 'NO') {
+                reasons.push("• No es estudiante de la carrera de Fisioterapia.");
+            }
+            if (injury === 'SI') {
+                reasons.push("• Ha tenido una lesión incapacitante en los últimos 6 meses.");
+            }
+            if (klippel === 'SI') {
+                reasons.push("• Presenta trastorno genético de Síndrome de Klippel-Feil.");
+            }
+
+            if (reasons.length > 0) {
+                isEligible = false;
+                banner.classList.remove('hidden');
+                reasonText.innerHTML = "<strong>Acceso restringido debido a los siguientes criterios:</strong><br>" + reasons.join('<br>');
+                
+                btnToCuestionario.disabled = true;
+                btnToCuestionario.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
+                
+                tab3.classList.add('opacity-60', 'cursor-not-allowed');
+                lockIcon.classList.remove('hidden');
+            } else {
+                isEligible = true;
+                banner.classList.add('hidden');
+                
+                btnToCuestionario.disabled = false;
+                btnToCuestionario.className = "bg-sky-700 hover:bg-sky-800 text-white font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow cursor-pointer";
+                
+                tab3.classList.remove('opacity-60', 'cursor-not-allowed');
+                lockIcon.classList.add('hidden');
+            }
+        }
+
+        // Progreso de llenado del CUCRA-24
+        function updateProgress() {
+            let answered = 0;
+            questionsCUCRA.forEach(q => {
+                if (document.querySelector(`input[name="q_${q.id}"]:checked`)) {
+                    answered++;
+                }
+            });
+
+            const pct = Math.round((answered / 24) * 100);
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-percentage').innerText = `${pct}% (${answered}/24)`;
+        }
+
+        // Modal Guide Functions
+        function openGuideModal() {
+            document.getElementById('guide-modal').classList.remove('hidden');
+        }
+
+        function closeGuideModal() {
+            document.getElementById('guide-modal').classList.add('hidden');
+        }
+
+        function switchGuideTab(platform) {
+            const tabAndroid = document.getElementById('tab-android');
+            const tabIos = document.getElementById('tab-ios');
+            const guideAndroid = document.getElementById('guide-android');
+            const guideIos = document.getElementById('guide-ios');
+
+            if (platform === 'android') {
+                tabAndroid.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-sky-600 text-sky-700 bg-white";
+                tabIos.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+                guideAndroid.classList.remove('hidden');
+                guideIos.classList.add('hidden');
+            } else {
+                tabIos.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-sky-600 text-sky-700 bg-white";
+                tabAndroid.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+                guideIos.classList.remove('hidden');
+                guideAndroid.classList.add('hidden');
+            }
+        }
+
+        // Cálculo de Resultados
+        function calculateResults() {
+            let scoreDim1 = 0;
+            let scoreDim2 = 0;
+            let totalScore = 0;
+            let allAnswered = true;
+
+            questionsCUCRA.forEach(q => {
+                const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (selected) {
+                    const val = parseInt(selected.value, 10);
+                    if (q.dim === 1) scoreDim1 += val;
+                    if (q.dim === 2) scoreDim2 += val;
+                } else {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Por favor responda los 24 ítems del cuestionario antes de procesar.');
+                return;
+            }
+
+            const hrs = document.getElementById('useHours').value;
+            const mins = document.getElementById('useMinutes').value;
+
+            if (hrs === '' || mins === '') {
+                alert('Por favor ingrese el tiempo de uso diario del celular (Horas y Minutos).');
+                return;
+            }
+
+            totalScore = scoreDim1 + scoreDim2;
+
+            // Datos Personales
+            const name = document.getElementById('fullName').value;
+            const age = document.getElementById('age').value;
+            const cycle = document.getElementById('academicCycle').value;
+
+            document.getElementById('res-name').innerText = name;
+            document.getElementById('res-age-cycle').innerText = `${age} años | ${cycle}° Ciclo`;
+            document.getElementById('res-screen-time').innerText = `${hrs} hrs ${mins} min / día`;
+
+            document.getElementById('total-score').innerText = `${totalScore} / 120`;
+            document.getElementById('dim1-score').innerText = `${scoreDim1} / 60`;
+            document.getElementById('dim2-score').innerText = `${scoreDim2} / 60`;
+
+            // Interpretación del puntaje
+            let levelBadge = document.getElementById('score-level-badge');
+            let interpText = document.getElementById('interpretation-text');
+
+            if (totalScore <= 48) {
+                levelBadge.innerText = "Uso Leve / Rendimiento Óptimo";
+                levelBadge.className = "inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-emerald-100 text-emerald-800";
+                interpText.innerText = "El estudiante presenta un uso autorregulado y saludable del teléfono celular, registrando una interferencia mínima o nula en su formación académica en Fisioterapia.";
+            } else if (totalScore <= 84) {
+                levelBadge.innerText = "Uso Moderado / Riesgo de Interferencia";
+                levelBadge.className = "inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-amber-100 text-amber-800";
+                interpText.innerText = "El estudiante demuestra hábitos de uso del celular que ocasionalmente interfieren con la atención en clases y tareas universitarias. Se sugiere implementar estrategias de higiene digital y regulación del tiempo en pantalla.";
+            } else {
+                levelBadge.innerText = "Uso Severo / Alto Riesgo de Adicción Digital";
+                levelBadge.className = "inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-rose-100 text-rose-800";
+                interpText.innerText = "Se identifica un patrón dependiente del uso del móvil con afectación considerable en la concentración, hábitos de descanso y rendimiento académico. Se aconseja consejería psicopedagógica y desintoxicación digital.";
+            }
+
+            // Mostrar contenedor de resultados
+            const resContainer = document.getElementById('results-container');
+            resContainer.classList.remove('hidden');
+            resContainer.scrollIntoView({ behavior: 'smooth' });
+
+            // Guardar en LocalStorage
+            saveToLocalStorage({
+                name, age, cycle, screenTime: `${hrs}h ${mins}m`, scoreDim1, scoreDim2, totalScore, timestamp: new Date().toISOString()
+            });
+        }
+
+        // Exportar a CSV
+        function exportCSV() {
+            const name = document.getElementById('fullName').value || 'Estudiante';
+            const age = document.getElementById('age').value || '';
+            const cycle = document.getElementById('academicCycle').value || '';
+            const hrs = document.getElementById('useHours').value || '0';
+            const mins = document.getElementById('useMinutes').value || '0';
+            
+            let dim1 = 0, dim2 = 0;
+            questionsCUCRA.forEach(q => {
+                const sel = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (sel) {
+                    if (q.dim === 1) dim1 += parseInt(sel.value);
+                    if (q.dim === 2) dim2 += parseInt(sel.value);
+                }
+            });
+
+            const rows = [
+                ["Estudiante", "Edad", "Ciclo", "Tiempo Uso Diario", "Dimensión 1 (Uso)", "Dimensión 2 (Rendimiento)", "Puntaje Total CUCRA-24", "Fecha"],
+                [name, age, cycle, `${hrs}h ${mins}m`, dim1, dim2, dim1 + dim2, new Date().toLocaleString()]
+            ];
+
+            let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `CUCRA24_${name.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function saveToLocalStorage(data) {
+            let records = JSON.parse(localStorage.getItem('cucra24_records') || '[]');
+            records.push(data);
+            localStorage.setItem('cucra24_records', JSON.stringify(records));
+        }
+    </script>
+</body>
+</html>
