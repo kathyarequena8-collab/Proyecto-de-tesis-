@@ -158,18 +158,18 @@
                             </h3>
                         </div>
 
-                        <!-- Botón para ver/descargar el consentimiento con imagen 1 y 2 cargadas -->
+                        <!-- Botón para ver/descargar el consentimiento -->
                         <div>
-                            <button type="button" onclick="openConsentModal()" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm">
+                            <button type="button" onclick="openConsentModal()" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm cursor-pointer">
                                 <i data-lucide="download" class="w-4 h-4"></i>
-                                <span>Descargar Consentimiento Informado</span>
+                                <span>Revisar y Descargar Consentimiento Informado</span>
                             </button>
                         </div>
 
                         <!-- Opciones habilitadas tras la interacción -->
                         <div id="consent-checkbox-container" class="space-y-3 pt-2 opacity-50 pointer-events-none transition-all">
                             <p class="text-xs text-amber-700 font-medium italic" id="consent-warning-msg">
-                                * Debe hacer clic en "Descargar Consentimiento Informado" y revisar el documento para habilitar las opciones de aceptación.
+                                * Debe hacer clic en "Revisar y Descargar Consentimiento Informado" y descargar el documento para habilitar las opciones de aceptación.
                             </p>
                             
                             <!-- Checkbox 1 -->
@@ -430,35 +430,35 @@
                     <h2 class="text-3xl font-bold text-slate-900">¡Gracias por participar!</h2>
                     <p class="text-slate-600 max-w-lg mx-auto">Tu valioso tiempo y respuestas han sido registrados correctamente para esta investigación académica.</p>
                 </div>
-            </section>
-
-            <!-- PLANTILLA OCULTA PARA IMPRIMIR PDF -->
-            <div id="pdf-template" class="hidden p-8 bg-white space-y-6 text-slate-900">
-                <div class="border-b-2 border-slate-800 pb-4">
-                    <h1 class="text-xl font-bold">REPORTE CUESTIONARIO CUCRA-24</h1>
-                    <p class="text-xs text-slate-600">Uso del Celular y Rendimiento Académico en Estudiantes de Fisioterapia</p>
+            <!-- PLANTILLA OCULTA PARA IMPRIMIR PDF (CUESTIONARIO ÍNTEGRO) -->
+            <div id="pdf-template" class="hidden p-8 bg-white space-y-6 text-slate-900 font-sans">
+                <div class="border-b-2 border-slate-900 pb-4">
+                    <h1 class="text-xl font-bold uppercase tracking-tight text-slate-900">Reporte Íntegro Cuestionario CUCRA-24</h1>
+                    <p class="text-xs text-slate-600 mt-1">Investigación: Relación entre el tiempo de uso del celular y el ángulo de flexión cervical / Rendimiento Académico</p>
+                    <p class="text-xs text-slate-500">Investigadora: Kathya Elizabeth Requena Robles (kathyarequena8@gmail.com)</p>
                 </div>
                 
-                <div class="space-y-2 text-xs">
-                    <p><strong>Estudiante:</strong> <span id="pdf-name"></span></p>
-                    <p><strong>Edad / Sexo:</strong> <span id="pdf-age-gender"></span></p>
-                    <p><strong>Ciclo Académico:</strong> <span id="pdf-cycle"></span></p>
-                    <p><strong>Celular / Correo:</strong> <span id="pdf-contact"></span></p>
-                    <p><strong>Uso Hoy:</strong> <span id="pdf-use-today"></span> | <strong>Uso Semanal:</strong> <span id="pdf-use-week"></span></p>
+                <!-- Datos del Participante -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-300 space-y-1 text-xs">
+                    <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1">Datos Sociodemográficos</h3>
+                    <p><strong>Nombres y Apellidos:</strong> <span id="pdf-name"></span></p>
+                    <p><strong>Edad:</strong> <span id="pdf-age"></span> años | <strong>Sexo:</strong> <span id="pdf-gender"></span></p>
+                    <p><strong>Ciclo de Estudio:</strong> <span id="pdf-cycle"></span></p>
+                    <p><strong>Teléfono:</strong> <span id="pdf-phone"></span> | <strong>Correo Electrónico:</strong> <span id="pdf-email"></span></p>
+                    <p class="pt-1 border-t border-slate-200 mt-1"><strong>Tiempo de uso diario (Hoy):</strong> <span id="pdf-use-today"></span> | <strong>Tiempo de uso semanal:</strong> <span id="pdf-use-week"></span></p>
                 </div>
 
-                <hr class="border-slate-300">
-
+                <!-- Cuestionario Íntegro con Pregunta Completa y Respuesta -->
                 <div>
-                    <h2 class="font-bold text-sm mb-2">Respuestas Marcadas del Cuestionario:</h2>
-                    <div id="pdf-answers-list" class="space-y-1 text-xs"></div>
+                    <h2 class="font-bold text-sm text-slate-900 border-b border-slate-400 pb-1 mb-3 uppercase tracking-wider">Cuestionario CUCRA-24 (Desarrollado Íntegramente)</h2>
+                    <div id="pdf-answers-list" class="space-y-2 text-xs"></div>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <!-- MODAL CONSENTIMIENTO INFORMADO (IMAGEN 1 Y 2 EN ORDEN) -->
+    <!-- MODAL CONSENTIMIENTO INFORMADO (IMAGEN 1 Y 2 EN ORDEN NUMÉRICO) -->
     <div id="consent-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop no-print">
         <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
             <div class="bg-slate-900 text-white p-4 flex items-center justify-between">
@@ -474,20 +474,20 @@
             <!-- Visualización de Imagen 1 e Imagen 2 en ese orden exacto -->
             <div class="p-6 overflow-y-auto space-y-6 bg-slate-100 flex-grow">
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center space-y-2">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Imagen 1: Consentimiento Informado (Parte 1)</p>
-                    <img src="https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80" alt="Consentimiento Informado Imagen 1" class="w-full max-h-[500px] object-contain rounded border border-slate-200 mx-auto">
+                    <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Página 1: Consentimiento Informado</p>
+                    <img src="1.jpeg" alt="Consentimiento Informado - Página 1" class="w-full max-h-[550px] object-contain rounded border border-slate-200 mx-auto" onerror="this.src='https://placehold.co/600x800/f1f5f9/334155?text=1.jpeg+(Consentimiento+P%C3%A1g+1)'">
                 </div>
 
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center space-y-2">
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Imagen 2: Consentimiento Informado (Parte 2)</p>
-                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80" alt="Consentimiento Informado Imagen 2" class="w-full max-h-[500px] object-contain rounded border border-slate-200 mx-auto">
+                    <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Página 2: Consentimiento Informado</p>
+                    <img src="2.jpeg" alt="Consentimiento Informado - Página 2" class="w-full max-h-[550px] object-contain rounded border border-slate-200 mx-auto" onerror="this.src='https://placehold.co/600x800/f1f5f9/334155?text=2.jpeg+(Consentimiento+P%C3%A1g+2)'">
                 </div>
             </div>
 
             <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end gap-3">
-                <button type="button" onclick="confirmConsentDownload()" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i>
-                    <span>Confirmar Lectura y Descarga</span>
+                <button type="button" onclick="confirmConsentDownload()" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-md cursor-pointer">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Confirmar Lectura y Descargar Imágenes</span>
                 </button>
             </div>
         </div>
@@ -556,6 +556,14 @@
             { id: 24, dim: 2, text: "24. Interrumpo mi preparación para evaluaciones académicas para consultar el celular sin necesidad." }
         ];
 
+        const scaleMap = {
+            1: 'Nunca',
+            2: 'Casi nunca',
+            3: 'A veces',
+            4: 'Casi siempre',
+            5: 'Siempre'
+        };
+
         let currentSection = 1;
         let isEligible = false;
         let downloadedConsent = false;
@@ -599,14 +607,30 @@
         function openConsentModal() { document.getElementById('consent-modal').classList.remove('hidden'); }
         function closeConsentModal() { document.getElementById('consent-modal').classList.add('hidden'); }
 
+        // Función para descargar las 2 imágenes reales (1.jpeg y 2.jpeg)
+        function downloadImage(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
         function confirmConsentDownload() {
+            // Descargar ambas imágenes
+            downloadImage('1.jpeg', 'Consentimiento_Informado_Pag1.jpeg');
+            setTimeout(() => {
+                downloadImage('2.jpeg', 'Consentimiento_Informado_Pag2.jpeg');
+            }, 500);
+
             downloadedConsent = true;
             closeConsentModal();
             const container = document.getElementById('consent-checkbox-container');
             const msg = document.getElementById('consent-warning-msg');
             container.classList.remove('opacity-50', 'pointer-events-none');
-            msg.innerText = "✓ Consentimiento revisado y descargado. Opciones habilitadas.";
-            msg.className = "text-xs text-emerald-700 font-medium";
+            msg.innerText = "✓ Consentimiento descargado e inspeccionado. Opciones de aceptación habilitadas.";
+            msg.className = "text-xs text-emerald-700 font-semibold";
         }
 
         function checkConsentState() {
@@ -704,16 +728,21 @@
 
         function finalizeAndSubmit() {
             let allAnswered = true;
-            let summaryText = "RESPUESTAS CUESTIONARIO CUCRA-24:\n\n";
+            let summaryText = "RESPUESTAS CUESTIONARIO CUCRA-24 (DESARROLLO ÍNTEGRO):\n\n";
 
             questionsCUCRA.forEach(q => {
                 const sel = document.querySelector(`input[name="q_${q.id}"]:checked`);
-                if (!sel) allAnswered = false;
-                else summaryText += `${q.id}. Valor: ${sel.value}\n`;
+                if (!sel) {
+                    allAnswered = false;
+                } else {
+                    const valNum = sel.value;
+                    const valText = scaleMap[valNum];
+                    summaryText += `${q.text}\n   -> Respuesta: ${valNum} (${valText})\n\n`;
+                }
             });
 
             if (!allAnswered) {
-                alert('Por favor responda todos los 24 ítems.');
+                alert('Por favor responda todos los 24 ítems del cuestionario antes de finalizar.');
                 return;
             }
 
@@ -723,7 +752,7 @@
             const minsWeek = document.getElementById('useMinutesWeek').value;
 
             if (hrsToday === '' || minsToday === '' || hrsWeek === '' || minsWeek === '') {
-                alert('Por favor complete las preguntas de tiempo de uso (día y semana).');
+                alert('Por favor complete las preguntas sobre el tiempo de uso del celular (hoy y semana).');
                 return;
             }
 
@@ -734,34 +763,70 @@
             const phone = document.getElementById('phoneNumber').value;
             const email = document.getElementById('userEmail').value;
 
+            // Rellenar Plantilla PDF con Cuestionario Íntegro
             document.getElementById('pdf-name').innerText = name;
-            document.getElementById('pdf-age-gender').innerText = `${age} años | ${gender}`;
+            document.getElementById('pdf-age').innerText = age;
+            document.getElementById('pdf-gender').innerText = gender;
             document.getElementById('pdf-cycle').innerText = `${cycle}° Ciclo`;
-            document.getElementById('pdf-contact').innerText = `${phone} | ${email}`;
-            document.getElementById('pdf-use-today').innerText = `${hrsToday}h ${minsToday}m`;
-            document.getElementById('pdf-use-week').innerText = `${hrsWeek}h ${minsWeek}m`;
+            document.getElementById('pdf-phone').innerText = phone;
+            document.getElementById('pdf-email').innerText = email;
+            document.getElementById('pdf-use-today').innerText = `${hrsToday} horas y ${minsToday} minutos`;
+            document.getElementById('pdf-use-week').innerText = `${hrsWeek} horas y ${minsWeek} minutos`;
 
             const pdfAnswers = document.getElementById('pdf-answers-list');
             pdfAnswers.innerHTML = '';
+
             questionsCUCRA.forEach(q => {
-                const val = document.querySelector(`input[name="q_${q.id}"]:checked`).value;
-                pdfAnswers.innerHTML += `<p><strong>Ítem ${q.id}:</strong> Opción: ${val}</p>`;
+                const valNum = document.querySelector(`input[name="q_${q.id}"]:checked`).value;
+                const valText = scaleMap[valNum];
+
+                pdfAnswers.innerHTML += `
+                    <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+                        <p class="font-medium text-slate-800">${q.text}</p>
+                        <p class="text-sky-800 font-bold mt-1">✓ Respuesta seleccionada: <span class="underline">${valNum} - ${valText}</span></p>
+                    </div>
+                `;
             });
 
+            // Generar PDF y Descargar
             const element = document.getElementById('pdf-template');
             element.classList.remove('hidden');
-            html2pdf().from(element).save(`CUCRA24_${name.replace(/\s+/g, '_')}.pdf`).then(() => {
+
+            const opt = {
+                margin:       10,
+                filename:     `CUCRA24_Respuesta_${name.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
                 element.classList.add('hidden');
             });
 
-            const mailSubject = encodeURIComponent(`Respuestas CUCRA-24 - ${name}`);
+            // Preparar envío automático al correo kathyarequena8@gmail.com
+            const recipientEmail = "kathyarequena8@gmail.com";
+            const mailSubject = encodeURIComponent(`CUESTIONARIO CUCRA-24 COMPLETADO - ${name}`);
             const mailBody = encodeURIComponent(
-                `DATOS GENERALES:\nNombre: ${name}\nEdad: ${age}\nSexo: ${gender}\nCiclo: ${cycle}\nCelular: ${phone}\nCorreo: ${email}\n\n` +
-                `TIEMPO DE USO:\nHoy: ${hrsToday}h ${minsToday}m\nSemana: ${hrsWeek}h ${minsWeek}m\n\n` +
+                `INVESTIGACIÓN CUCRA-24 - NUEVA RESPUESTA REGISTRADA\n\n` +
+                `DATOS SOCIODEMOGRÁFICOS:\n` +
+                `• Nombres y Apellidos: ${name}\n` +
+                `• Edad: ${age} años\n` +
+                `• Sexo: ${gender}\n` +
+                `• Ciclo de estudio: ${cycle}° Ciclo\n` +
+                `• Celular: ${phone}\n` +
+                `• Correo del participante: ${email}\n\n` +
+                `REGISTRO DE TIEMPO DE USO:\n` +
+                `• Uso el día de hoy: ${hrsToday}h ${minsToday}m\n` +
+                `• Uso en la semana: ${hrsWeek}h ${minsWeek}m\n\n` +
+                `--------------------------------------------------\n` +
                 summaryText
             );
-            window.location.href = `mailto:kathyarequena8@gmail.com?subject=${mailSubject}&body=${mailBody}`;
 
+            // Activar envío mediante el cliente de correo
+            window.location.href = `mailto:${recipientEmail}?subject=${mailSubject}&body=${mailBody}`;
+
+            // Enviar inmediatamente a la vista de "Gracias por participar" (ocultando resultados)
             showThanksView();
         }
 
