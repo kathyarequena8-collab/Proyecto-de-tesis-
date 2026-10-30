@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- html2pdf.js para la generación del PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -23,8 +25,6 @@
             .border { border-color: #cbd5e1 !important; }
         }
         .print-only { display: none; }
-        
-        /* Modal Animation */
         .modal-backdrop {
             background-color: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(4px);
@@ -33,7 +33,7 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Header Principal (Diseño Médico/Académico) -->
+    <!-- Header Principal -->
     <header class="bg-gradient-to-r from-slate-900 via-sky-950 to-indigo-950 text-white shadow-lg no-print">
         <div class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3.5">
@@ -56,13 +56,13 @@
     <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex-grow w-full">
 
         <!-- Navigation Steps Bar -->
-        <nav class="mb-8 no-print">
+        <nav id="nav-steps" class="mb-8 no-print">
             <ol class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <li id="step-tab-1" class="step-tab bg-white p-4 rounded-xl shadow-sm border-2 border-sky-600 flex items-center gap-3 transition-all cursor-pointer" onclick="switchSection(1)">
                     <span class="step-num w-8 h-8 rounded-full bg-sky-600 text-white font-semibold flex items-center justify-center text-sm">1</span>
                     <div>
                         <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Apartado 1</p>
-                        <p class="text-sm font-bold text-slate-800">Datos Personales</p>
+                        <p class="text-sm font-bold text-slate-800">Datos Generales & Consentimiento</p>
                     </div>
                 </li>
                 <li id="step-tab-2" class="step-tab bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3 transition-all cursor-pointer" onclick="switchSection(2)">
@@ -88,26 +88,39 @@
         <!-- Dynamic Content Panels -->
         <div id="content-area">
 
-            <!-- APARTADO 1: DATOS PERSONALES -->
+            <!-- APARTADO 1: DATOS GENERALES Y CONSENTIMIENTO INFORMADO -->
             <section id="section-1" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <i data-lucide="user" class="text-sky-600"></i> Apartado 1: Datos Personales
+                        <i data-lucide="user" class="text-sky-600"></i> Apartado 1: Datos Generales
                     </h2>
                     <p class="text-sm text-slate-500 mt-1">Por favor ingrese su información sociodemográfica básica para fines de investigación.</p>
                 </div>
 
-                <form id="form-personal-data" class="grid grid-cols-1 md:grid-cols-2 gap-6" onsubmit="event.preventDefault(); switchSection(2);">
+                <form id="form-personal-data" class="grid grid-cols-1 md:grid-cols-2 gap-6" onsubmit="event.preventDefault(); validateSection1();">
+                    <!-- Nombre Completo -->
                     <div class="md:col-span-2">
-                        <label for="fullName" class="block text-sm font-medium text-slate-700 mb-1">Apellidos y Nombres Completo <span class="text-rose-500">*</span></label>
+                        <label for="fullName" class="block text-sm font-medium text-slate-700 mb-1">Apellidos y Nombres Completos <span class="text-rose-500">*</span></label>
                         <input type="text" id="fullName" required placeholder="Ej. Pérez Gómez, María Elena" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm">
                     </div>
 
+                    <!-- Edad -->
                     <div>
                         <label for="age" class="block text-sm font-medium text-slate-700 mb-1">Edad (años) <span class="text-rose-500">*</span></label>
                         <input type="number" id="age" min="15" max="80" required placeholder="Ej. 21" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm">
                     </div>
 
+                    <!-- Sexo -->
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-slate-700 mb-1">Sexo <span class="text-rose-500">*</span></label>
+                        <select id="gender" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm bg-white">
+                            <option value="" disabled selected>Seleccione opción...</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                    </div>
+
+                    <!-- Ciclo de Estudio -->
                     <div>
                         <label for="academicCycle" class="block text-sm font-medium text-slate-700 mb-1">Ciclo de Estudio <span class="text-rose-500">*</span></label>
                         <select id="academicCycle" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm bg-white">
@@ -125,8 +138,65 @@
                         </select>
                     </div>
 
+                    <!-- Número de Celular -->
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-slate-700 mb-1">Número de celular <span class="text-rose-500">*</span></label>
+                        <input type="tel" id="phoneNumber" required placeholder="Ej. 987654321" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm">
+                    </div>
+
+                    <!-- Correo Electrónico -->
+                    <div class="md:col-span-2">
+                        <label for="userEmail" class="block text-sm font-medium text-slate-700 mb-1">Correo electrónico <span class="text-rose-500">*</span></label>
+                        <input type="email" id="userEmail" required placeholder="ejemplo@correo.com" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm">
+                    </div>
+
+                    <!-- CONSENTIMIENTO INFORMADO -->
+                    <div class="md:col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4 mt-2">
+                        <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+                            <h3 class="text-md font-bold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="file-check" class="text-sky-600 w-5 h-5"></i> Consentimiento Informado
+                            </h3>
+                        </div>
+
+                        <!-- Botón para ver/descargar el consentimiento con imagen 1 y 2 cargadas -->
+                        <div>
+                            <button type="button" onclick="openConsentModal()" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                <span>Descargar Consentimiento Informado</span>
+                            </button>
+                        </div>
+
+                        <!-- Opciones habilitadas tras la interacción -->
+                        <div id="consent-checkbox-container" class="space-y-3 pt-2 opacity-50 pointer-events-none transition-all">
+                            <p class="text-xs text-amber-700 font-medium italic" id="consent-warning-msg">
+                                * Debe hacer clic en "Descargar Consentimiento Informado" y revisar el documento para habilitar las opciones de aceptación.
+                            </p>
+                            
+                            <!-- Checkbox 1 -->
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" id="checkReadConsent" onchange="checkConsentState()" class="w-4 h-4 text-sky-600 rounded border-slate-300 mt-0.5">
+                                <span class="text-sm font-medium text-slate-700">He leído el consentimiento informado</span>
+                            </label>
+
+                            <!-- Checkbox 2 / Radio Si-No -->
+                            <div class="space-y-2">
+                                <p class="text-sm font-medium text-slate-700">¿Estoy de acuerdo en formar parte del estudio?</p>
+                                <div class="flex items-center gap-6">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="radio" name="agreeStudy" value="SI" onchange="checkConsentState()" class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                                        <span class="ml-2 text-sm font-semibold text-slate-700">Sí</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="radio" name="agreeStudy" value="NO" onchange="handleConsentNo()" class="w-4 h-4 text-rose-600 focus:ring-rose-500">
+                                        <span class="ml-2 text-sm font-semibold text-slate-700">No</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="md:col-span-2 flex justify-end pt-4">
-                        <button type="submit" class="bg-sky-700 hover:bg-sky-800 text-white font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow">
+                        <button type="submit" id="btn-to-sec2" disabled class="bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed">
                             <span>Siguiente: Criterios</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
@@ -188,9 +258,24 @@
                             </label>
                         </div>
                     </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <p class="font-medium text-slate-800 text-sm sm:text-base">4. ¿El modelo de tu celular salió al mercado posterior al año 2017?</p>
+                        <div class="flex items-center gap-6">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_phone_year" value="SI" class="w-4 h-4 text-sky-600 focus:ring-sky-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">Sí</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="criteria_phone_year" value="NO" class="w-4 h-4 text-rose-600 focus:ring-rose-500" onchange="evaluateCriteria()">
+                                <span class="ml-2 text-sm font-semibold text-slate-700">No</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Banner de Bloqueo por Criterios de Exclusión -->
+                <!-- Banner de Bloqueo -->
                 <div id="exclusion-banner" class="hidden p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 space-y-2">
                     <div class="flex items-center gap-2 font-bold text-amber-800">
                         <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i>
@@ -244,7 +329,7 @@
                 </div>
 
                 <!-- Formulario CUCRA-24 Items -->
-                <form id="form-cucra" class="space-y-6" onsubmit="event.preventDefault(); calculateResults();">
+                <form id="form-cucra" class="space-y-6" onsubmit="event.preventDefault(); finalizeAndSubmit();">
                     
                     <!-- Subescala 1 -->
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
@@ -254,9 +339,7 @@
                             </h3>
                             <span class="text-xs font-medium px-2.5 py-1 bg-sky-100 text-sky-800 rounded-full">Ítems 1 al 12</span>
                         </div>
-                        <div class="space-y-6" id="dimension-1-container">
-                            <!-- Items 1 to 12 rendered dynamically -->
-                        </div>
+                        <div class="space-y-6" id="dimension-1-container"></div>
                     </div>
 
                     <!-- Subescala 2 -->
@@ -267,159 +350,152 @@
                             </h3>
                             <span class="text-xs font-medium px-2.5 py-1 bg-indigo-100 text-indigo-800 rounded-full">Ítems 13 al 24</span>
                         </div>
-                        <div class="space-y-6" id="dimension-2-container">
-                            <!-- Items 13 to 24 rendered dynamically -->
-                        </div>
+                        <div class="space-y-6" id="dimension-2-container"></div>
                     </div>
 
-                    <!-- SECCIÓN ADICIONAL: TIEMPO DE USO DEL CELULAR -->
+                    <!-- TIEMPO DE USO DEL CELULAR -->
                     <div class="bg-white rounded-2xl shadow-sm border-2 border-sky-500/30 p-6 space-y-6">
                         <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
                                 <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
                                     <i data-lucide="clock" class="w-5 h-5 text-sky-600"></i> Tiempo de Uso del Celular
                                 </h3>
-                                <p class="text-xs text-slate-500 mt-1">Indique el promedio de tiempo diario que utiliza su teléfono celular en pantalla activa.</p>
+                                <p class="text-xs text-slate-500 mt-1">Indique el registro de tiempo en pantalla activa en su dispositivo.</p>
                             </div>
                             
-                            <!-- Botón para abrir la Guía en Modal -->
                             <button type="button" onclick="openGuideModal()" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-2 shrink-0 shadow-sm">
                                 <i data-lucide="help-circle" class="w-4 h-4 text-sky-600"></i>
                                 <span>📱 ¿Cómo ver mi tiempo de uso?</span>
                             </button>
                         </div>
 
+                        <!-- Pregunta 1: Hoy -->
                         <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
                             <label class="block text-sm font-semibold text-slate-800">
-                                ¿Cuánto tiempo al día usas el celular? <span class="text-rose-500">*</span>
+                                ¿Cuánto tiempo usaste el celular el día de hoy? <span class="text-rose-500">*</span>
                             </label>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
                                 <div>
-                                    <label for="useHours" class="block text-xs font-medium text-slate-600 mb-1">Horas por día</label>
-                                    <div class="relative">
-                                        <input type="number" id="useHours" min="0" max="24" required placeholder="0 - 24" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm pr-12">
-                                        <span class="absolute right-3 top-2.5 text-xs font-semibold text-slate-400">hrs</span>
-                                    </div>
+                                    <label for="useHoursToday" class="block text-xs font-medium text-slate-600 mb-1">Horas el día de hoy</label>
+                                    <input type="number" id="useHoursToday" min="0" max="24" required placeholder="0 - 24" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 text-sm">
                                 </div>
                                 <div>
-                                    <label for="useMinutes" class="block text-xs font-medium text-slate-600 mb-1">Minutos por día</label>
-                                    <div class="relative">
-                                        <input type="number" id="useMinutes" min="0" max="59" required placeholder="0 - 59" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors text-sm pr-12">
-                                        <span class="absolute right-3 top-2.5 text-xs font-semibold text-slate-400">min</span>
-                                    </div>
+                                    <label for="useMinutesToday" class="block text-xs font-medium text-slate-600 mb-1">Minutos el día de hoy</label>
+                                    <input type="number" id="useMinutesToday" min="0" max="59" required placeholder="0 - 59" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 2: Semana -->
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
+                            <label class="block text-sm font-semibold text-slate-800">
+                                ¿Cuánto tiempo usaste el celular en la semana? <span class="text-rose-500">*</span>
+                            </label>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
+                                <div>
+                                    <label for="useHoursWeek" class="block text-xs font-medium text-slate-600 mb-1">Horas en la semana</label>
+                                    <input type="number" id="useHoursWeek" min="0" max="168" required placeholder="0 - 168" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 text-sm">
+                                </div>
+                                <div>
+                                    <label for="useMinutesWeek" class="block text-xs font-medium text-slate-600 mb-1">Minutos en la semana</label>
+                                    <input type="number" id="useMinutesWeek" min="0" max="59" required placeholder="0 - 59" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 text-sm">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Botón para Procesar -->
+                    <!-- Botón Finalizar y Enviar -->
                     <div class="flex justify-between items-center pt-4">
                         <button type="button" onclick="switchSection(2)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-5 py-2.5 rounded-lg transition-all flex items-center gap-2">
                             <i data-lucide="arrow-left" class="w-4 h-4"></i>
                             <span>Anterior</span>
                         </button>
                         
-                        <button type="submit" class="bg-sky-800 hover:bg-sky-900 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2">
-                            <i data-lucide="check-circle" class="w-5 h-5"></i>
-                            <span>Calcular y Ver Resultados</span>
+                        <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            <span>Finalizar y enviar</span>
                         </button>
                     </div>
                 </form>
+            </section>
 
-                <!-- RESULTADOS Y REPORTE -->
-                <div id="results-container" class="hidden bg-white rounded-2xl shadow-lg border border-sky-100 p-6 sm:p-8 space-y-8">
-                    <div class="border-b border-slate-200 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <span class="text-xs font-bold uppercase tracking-wider text-sky-600">Informe Final de Evaluación</span>
-                            <h2 class="text-2xl font-bold text-slate-900">Resultados CUCRA-24</h2>
-                        </div>
-                        <div class="flex items-center gap-2 no-print">
-                            <button onclick="exportCSV()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition">
-                                <i data-lucide="download" class="w-4 h-4"></i> Exportar CSV
-                            </button>
-                            <button onclick="window.print()" class="bg-sky-800 hover:bg-sky-900 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 transition shadow">
-                                <i data-lucide="printer" class="w-4 h-4"></i> Imprimir / Guardar PDF
-                            </button>
-                        </div>
-                    </div>
+            <!-- SECCIÓN: GRACIAS POR PARTICIPAR -->
+            <section id="thanks-section" class="hidden bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center space-y-6">
+                <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600">
+                    <i data-lucide="heart" class="w-10 h-10"></i>
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-bold text-slate-900">¡Gracias por participar!</h2>
+                    <p class="text-slate-600 max-w-lg mx-auto">Tu valioso tiempo y respuestas han sido registrados correctamente para esta investigación académica.</p>
+                </div>
+            </section>
 
-                    <!-- Resumen del Evaluado -->
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
-                        <div>
-                            <span class="text-slate-500 block text-xs">Estudiante</span>
-                            <strong id="res-name" class="text-slate-800">-</strong>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 block text-xs">Edad / Ciclo</span>
-                            <strong id="res-age-cycle" class="text-slate-800">-</strong>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 block text-xs">Carrera</span>
-                            <strong class="text-sky-700 font-semibold">Fisioterapia</strong>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 block text-xs">Uso Diario Registrado</span>
-                            <strong id="res-screen-time" class="text-slate-900 font-bold text-sky-800">-</strong>
-                        </div>
-                    </div>
-
-                    <!-- Score Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Score Total -->
-                        <div class="bg-gradient-to-br from-sky-50 to-indigo-50 p-5 rounded-xl border border-sky-200 flex flex-col justify-between">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold uppercase text-sky-800">Puntaje Total CUCRA-24</span>
-                                <i data-lucide="bar-chart-3" class="w-5 h-5 text-sky-600"></i>
-                            </div>
-                            <div class="text-3xl font-extrabold text-sky-950 my-1" id="total-score">0 / 120</div>
-                            <span id="score-level-badge" class="inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-sky-200 text-sky-900">
-                                Evaluando...
-                            </span>
-                        </div>
-
-                        <!-- Subescala 1 -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold uppercase text-slate-600">Uso Dependiente del Celular</span>
-                                <i data-lucide="smartphone" class="w-5 h-5 text-slate-500"></i>
-                            </div>
-                            <div class="text-2xl font-bold text-slate-800 my-1" id="dim1-score">0 / 60</div>
-                            <p class="text-xs text-slate-500">Dimensión 1 (Ítems 1-12)</p>
-                        </div>
-
-                        <!-- Subescala 2 -->
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold uppercase text-slate-600">Afección del Rendimiento Académico</span>
-                                <i data-lucide="book-open" class="w-5 h-5 text-slate-500"></i>
-                            </div>
-                            <div class="text-2xl font-bold text-slate-800 my-1" id="dim2-score">0 / 60</div>
-                            <p class="text-xs text-slate-500">Dimensión 2 (Ítems 13-24)</p>
-                        </div>
-                    </div>
-
-                    <!-- Interpretación Clínica / Académica -->
-                    <div class="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-                            <i data-lucide="file-check-2" class="w-4 h-4 text-sky-600"></i>
-                            Diagnóstico Interpretativo:
-                        </h4>
-                        <p class="text-sm text-slate-700 leading-relaxed" id="interpretation-text">
-                            -
-                        </p>
-                    </div>
+            <!-- PLANTILLA OCULTA PARA IMPRIMIR PDF -->
+            <div id="pdf-template" class="hidden p-8 bg-white space-y-6 text-slate-900">
+                <div class="border-b-2 border-slate-800 pb-4">
+                    <h1 class="text-xl font-bold">REPORTE CUESTIONARIO CUCRA-24</h1>
+                    <p class="text-xs text-slate-600">Uso del Celular y Rendimiento Académico en Estudiantes de Fisioterapia</p>
+                </div>
+                
+                <div class="space-y-2 text-xs">
+                    <p><strong>Estudiante:</strong> <span id="pdf-name"></span></p>
+                    <p><strong>Edad / Sexo:</strong> <span id="pdf-age-gender"></span></p>
+                    <p><strong>Ciclo Académico:</strong> <span id="pdf-cycle"></span></p>
+                    <p><strong>Celular / Correo:</strong> <span id="pdf-contact"></span></p>
+                    <p><strong>Uso Hoy:</strong> <span id="pdf-use-today"></span> | <strong>Uso Semanal:</strong> <span id="pdf-use-week"></span></p>
                 </div>
 
-            </section>
+                <hr class="border-slate-300">
+
+                <div>
+                    <h2 class="font-bold text-sm mb-2">Respuestas Marcadas del Cuestionario:</h2>
+                    <div id="pdf-answers-list" class="space-y-1 text-xs"></div>
+                </div>
+            </div>
 
         </div>
     </main>
 
-    <!-- MODAL INTERACTIVO: GUÍA PASO A PASO PARA VER TIEMPO EN PANTALLA -->
+    <!-- MODAL CONSENTIMIENTO INFORMADO (IMAGEN 1 Y 2 EN ORDEN) -->
+    <div id="consent-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop no-print">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="bg-slate-900 text-white p-4 flex items-center justify-between">
+                <h3 class="font-bold text-base flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-5 h-5 text-sky-400"></i>
+                    Documento de Consentimiento Informado
+                </h3>
+                <button type="button" onclick="closeConsentModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Visualización de Imagen 1 e Imagen 2 en ese orden exacto -->
+            <div class="p-6 overflow-y-auto space-y-6 bg-slate-100 flex-grow">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center space-y-2">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Imagen 1: Consentimiento Informado (Parte 1)</p>
+                    <img src="https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80" alt="Consentimiento Informado Imagen 1" class="w-full max-h-[500px] object-contain rounded border border-slate-200 mx-auto">
+                </div>
+
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center space-y-2">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Imagen 2: Consentimiento Informado (Parte 2)</p>
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80" alt="Consentimiento Informado Imagen 2" class="w-full max-h-[500px] object-contain rounded border border-slate-200 mx-auto">
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end gap-3">
+                <button type="button" onclick="confirmConsentDownload()" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span>Confirmar Lectura y Descarga</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GUÍA DE PANTALLA -->
     <div id="guide-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop no-print">
         <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden transform transition-all">
-            <!-- Modal Header -->
             <div class="bg-slate-900 text-white p-5 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-sky-500/20 rounded-lg">
@@ -427,98 +503,19 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-base">Guía: Tiempo de Uso del Celular</h3>
-                        <p class="text-xs text-slate-300">Consulte cómo verificar las horas diarias en su dispositivo</p>
+                        <p class="text-xs text-slate-300">Consulte cómo verificar las horas en su dispositivo</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeGuideModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+                <button type="button" onclick="closeGuideModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-
-            <!-- Tabs de Plataforma -->
-            <div class="flex border-b border-slate-200 bg-slate-50">
-                <button type="button" id="tab-android" onclick="switchGuideTab('android')" class="flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-sky-600 text-sky-700 bg-white">
-                    <i data-lucide="bot" class="w-4 h-4 text-emerald-600"></i>
-                    <span>Android (Bienestar Digital)</span>
-                </button>
-                <button type="button" id="tab-ios" onclick="switchGuideTab('ios')" class="flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800">
-                    <i data-lucide="apple" class="w-4 h-4 text-slate-800"></i>
-                    <span>Apple iOS (Tiempo en Pantalla)</span>
-                </button>
+            <div class="p-6 space-y-4 text-sm text-slate-700">
+                <p><strong>En Android:</strong> Ve a Ajustes > Bienestar Digital y controles parentales.</p>
+                <p><strong>En iPhone (iOS):</strong> Ve a Ajustes > Tiempo en Pantalla.</p>
             </div>
-
-            <!-- Modal Content Body -->
-            <div class="p-6 space-y-6">
-                <!-- GUÍA ANDROID -->
-                <div id="guide-android" class="space-y-4">
-                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center gap-3 text-xs text-emerald-800">
-                        <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0"></i>
-                        <span>En Android esta función se denomina <strong>"Bienestar Digital y Controles Parentales"</strong>.</span>
-                    </div>
-
-                    <ol class="space-y-3 text-sm text-slate-700">
-                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
-                            <div>
-                                <p class="font-semibold text-slate-900">Abra la aplicación Ajustes o Configuración</p>
-                                <p class="text-xs text-slate-500">Busque el icono del engranaje en su pantalla de inicio.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
-                            <div>
-                                <p class="font-semibold text-slate-900">Seleccione 'Bienestar Digital y controles parentales'</p>
-                                <p class="text-xs text-slate-500">En Samsung, Xiaomi, Motorola u otros modelos se encuentra listado en el menú principal de ajustes.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
-                            <div>
-                                <p class="font-semibold text-slate-900">Consulte el gráfico circular o panel de tiempo</p>
-                                <p class="text-xs text-slate-500">Aparecerá el tiempo total en pantalla acumulado hoy (ej. 5 h 35 min) o el promedio diario semanal.</p>
-                            </div>
-                        </li>
-                    </ol>
-                </div>
-
-                <!-- GUÍA APPLE iOS -->
-                <div id="guide-ios" class="hidden space-y-4">
-                    <div class="bg-sky-50 border border-sky-200 rounded-xl p-3 flex items-center gap-3 text-xs text-sky-800">
-                        <i data-lucide="info" class="w-5 h-5 text-sky-600 shrink-0"></i>
-                        <span>En iPhone / iPad esta función se denomina <strong>"Tiempo en Pantalla" (Screen Time)</strong>.</span>
-                    </div>
-
-                    <ol class="space-y-3 text-sm text-slate-700">
-                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                            <span class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">1</span>
-                            <div>
-                                <p class="font-semibold text-slate-900">Ingresé a 'Ajustes' / 'Configuración'</p>
-                                <p class="text-xs text-slate-500">Acceda al menú general de su iPhone.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                            <span class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">2</span>
-                            <div>
-                                <p class="font-semibold text-slate-900">Seleccione la opción 'Tiempo en Pantalla'</p>
-                                <p class="text-xs text-slate-500">Identificada con el icono de un reloj de arena púrpura.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                            <span class="w-6 h-6 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs shrink-0">3</span>
-                            <div>
-                                <p class="font-semibold text-slate-900">Presione 'Ver toda la actividad'</p>
-                                <p class="text-xs text-slate-500">Podrá consultar su promedio diario en Horas y Minutos del día actual o de la última semana.</p>
-                            </div>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- Modal Footer -->
             <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end">
-                <button type="button" onclick="closeGuideModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition">
-                    Entendido, regresar
-                </button>
+                <button type="button" onclick="closeGuideModal()" class="bg-slate-800 text-white text-xs font-semibold px-5 py-2.5 rounded-xl">Entendido</button>
             </div>
         </div>
     </div>
@@ -530,11 +527,9 @@
         </div>
     </footer>
 
-    <!-- Scripts de Lógica -->
+    <!-- Scripts -->
     <script>
-        // Preguntas estandarizadas CUCRA-24
         const questionsCUCRA = [
-            // Dimensión 1: Uso Dependiente del Celular (1 - 12)
             { id: 1, dim: 1, text: "1. Siento la necesidad constante de revisar mi celular durante el día." },
             { id: 2, dim: 1, text: "2. Utilizo el celular por más tiempo del que tenía planificado inicialmente." },
             { id: 3, dim: 1, text: "3. Me siento ansioso/a o inquieto/a cuando olvido o no puedo usar mi celular." },
@@ -547,8 +542,6 @@
             { id: 10, dim: 1, text: "10. Utilizo el teléfono móvil para evadir preocupaciones o estados de ánimo bajos." },
             { id: 11, dim: 1, text: "11. Siento pánico o malestar extremo si me quedo sin batería o señal de internet." },
             { id: 12, dim: 1, text: "12. Pierdo la noción del tiempo fácilmente cuando estoy navegando en redes sociales con mi celular." },
-
-            // Dimensión 2: Impacto en el Rendimiento Académico (13 - 24)
             { id: 13, dim: 2, text: "13. Me distraigo usando el celular mientras escucho mis clases presenciales o virtuales." },
             { id: 14, dim: 2, text: "14. Dejo de lado el estudio o tareas por estar respondiendo mensajes o navegando en el celular." },
             { id: 15, dim: 2, text: "15. Siento que mi capacidad de concentración en los exámenes se ve perjudicada por el celular." },
@@ -565,17 +558,16 @@
 
         let currentSection = 1;
         let isEligible = false;
+        let downloadedConsent = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             renderQuestions();
             lucide.createIcons();
         });
 
-        // Renderizado dinámico de preguntas
         function renderQuestions() {
             const container1 = document.getElementById('dimension-1-container');
             const container2 = document.getElementById('dimension-2-container');
-
             container1.innerHTML = '';
             container2.innerHTML = '';
 
@@ -599,39 +591,91 @@
                         </div>
                     </div>
                 `;
-
-                if (q.dim === 1) {
-                    container1.innerHTML += itemHTML;
-                } else {
-                    container2.innerHTML += itemHTML;
-                }
+                if (q.dim === 1) container1.innerHTML += itemHTML;
+                else container2.innerHTML += itemHTML;
             });
         }
 
-        // Navegación entre apartados
-        function switchSection(targetSection) {
-            if (targetSection === 3 && !isEligible) {
+        function openConsentModal() { document.getElementById('consent-modal').classList.remove('hidden'); }
+        function closeConsentModal() { document.getElementById('consent-modal').classList.add('hidden'); }
+
+        function confirmConsentDownload() {
+            downloadedConsent = true;
+            closeConsentModal();
+            const container = document.getElementById('consent-checkbox-container');
+            const msg = document.getElementById('consent-warning-msg');
+            container.classList.remove('opacity-50', 'pointer-events-none');
+            msg.innerText = "✓ Consentimiento revisado y descargado. Opciones habilitadas.";
+            msg.className = "text-xs text-emerald-700 font-medium";
+        }
+
+        function checkConsentState() {
+            const checkRead = document.getElementById('checkReadConsent').checked;
+            const agreeChoice = document.querySelector('input[name="agreeStudy"]:checked')?.value;
+            const btnSec2 = document.getElementById('btn-to-sec2');
+
+            if (checkRead && agreeChoice === 'SI') {
+                btnSec2.disabled = false;
+                btnSec2.className = "bg-sky-700 hover:bg-sky-800 text-white font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm cursor-pointer";
+            } else {
+                btnSec2.disabled = true;
+                btnSec2.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
+            }
+        }
+
+        function handleConsentNo() { showThanksView(); }
+        function validateSection1() { switchSection(2); }
+
+        function evaluateCriteria() {
+            const physio = document.querySelector('input[name="criteria_physio"]:checked')?.value;
+            const injury = document.querySelector('input[name="criteria_injury"]:checked')?.value;
+            const klippel = document.querySelector('input[name="criteria_klippel"]:checked')?.value;
+            const phoneYear = document.querySelector('input[name="criteria_phone_year"]:checked')?.value;
+
+            const banner = document.getElementById('exclusion-banner');
+            const reasonText = document.getElementById('exclusion-reason');
+            const btnToCuestionario = document.getElementById('btn-to-cuestionario');
+            const tab3 = document.getElementById('step-tab-3');
+            const lockIcon = document.getElementById('lock-icon');
+
+            if (!physio || !injury || !klippel || !phoneYear) {
+                isEligible = false;
+                banner.classList.add('hidden');
+                btnToCuestionario.disabled = true;
+                btnToCuestionario.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
                 return;
             }
 
-            if (targetSection > 1) {
-                const name = document.getElementById('fullName').value;
-                const age = document.getElementById('age').value;
-                const cycle = document.getElementById('academicCycle').value;
+            let reasons = [];
+            if (physio === 'NO') reasons.push("• No es estudiante de Fisioterapia.");
+            if (injury === 'SI') reasons.push("• Presenta lesión incapacitante en los últimos 6 meses.");
+            if (klippel === 'SI') reasons.push("• Presenta Síndrome de Klippel-Feil.");
+            if (phoneYear === 'NO') reasons.push("• El modelo de celular no es posterior al año 2017.");
 
-                if (!name || !age || !cycle) {
-                    alert('Por favor complete todos los datos personales en el Apartado 1.');
-                    switchSection(1);
-                    return;
-                }
+            if (reasons.length > 0) {
+                isEligible = false;
+                banner.classList.remove('hidden');
+                reasonText.innerHTML = "<strong>Acceso restringido debido a los siguientes criterios:</strong><br>" + reasons.join('<br>');
+                btnToCuestionario.disabled = true;
+                btnToCuestionario.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
+                tab3.classList.add('opacity-60', 'cursor-not-allowed');
+                lockIcon.classList.remove('hidden');
+            } else {
+                isEligible = true;
+                banner.classList.add('hidden');
+                btnToCuestionario.disabled = false;
+                btnToCuestionario.className = "bg-sky-700 hover:bg-sky-800 text-white font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow cursor-pointer";
+                tab3.classList.remove('opacity-60', 'cursor-not-allowed');
+                lockIcon.classList.add('hidden');
             }
+        }
 
-            currentSection = targetSection;
+        function switchSection(targetSection) {
+            if (targetSection === 3 && !isEligible) return;
 
             document.getElementById('section-1').classList.add('hidden');
             document.getElementById('section-2').classList.add('hidden');
             document.getElementById('section-3').classList.add('hidden');
-
             document.getElementById(`section-${targetSection}`).classList.remove('hidden');
 
             for (let i = 1; i <= 3; i++) {
@@ -642,217 +686,92 @@
                     tab.className = "step-tab bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3 transition-all cursor-pointer";
                 }
             }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Evaluación de Criterios de Inclusión / Exclusión
-        function evaluateCriteria() {
-            const physio = document.querySelector('input[name="criteria_physio"]:checked')?.value;
-            const injury = document.querySelector('input[name="criteria_injury"]:checked')?.value;
-            const klippel = document.querySelector('input[name="criteria_klippel"]:checked')?.value;
-
-            const banner = document.getElementById('exclusion-banner');
-            const reasonText = document.getElementById('exclusion-reason');
-            const btnToCuestionario = document.getElementById('btn-to-cuestionario');
-            const tab3 = document.getElementById('step-tab-3');
-            const lockIcon = document.getElementById('lock-icon');
-
-            if (!physio || !injury || !klippel) {
-                isEligible = false;
-                banner.classList.add('hidden');
-                btnToCuestionario.disabled = true;
-                btnToCuestionario.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
-                return;
-            }
-
-            let reasons = [];
-
-            if (physio === 'NO') {
-                reasons.push("• No es estudiante de la carrera de Fisioterapia.");
-            }
-            if (injury === 'SI') {
-                reasons.push("• Ha tenido una lesión incapacitante en los últimos 6 meses.");
-            }
-            if (klippel === 'SI') {
-                reasons.push("• Presenta trastorno genético de Síndrome de Klippel-Feil.");
-            }
-
-            if (reasons.length > 0) {
-                isEligible = false;
-                banner.classList.remove('hidden');
-                reasonText.innerHTML = "<strong>Acceso restringido debido a los siguientes criterios:</strong><br>" + reasons.join('<br>');
-                
-                btnToCuestionario.disabled = true;
-                btnToCuestionario.className = "bg-slate-300 text-slate-500 font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-not-allowed";
-                
-                tab3.classList.add('opacity-60', 'cursor-not-allowed');
-                lockIcon.classList.remove('hidden');
-            } else {
-                isEligible = true;
-                banner.classList.add('hidden');
-                
-                btnToCuestionario.disabled = false;
-                btnToCuestionario.className = "bg-sky-700 hover:bg-sky-800 text-white font-medium px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow cursor-pointer";
-                
-                tab3.classList.remove('opacity-60', 'cursor-not-allowed');
-                lockIcon.classList.add('hidden');
-            }
-        }
-
-        // Progreso de llenado del CUCRA-24
         function updateProgress() {
             let answered = 0;
             questionsCUCRA.forEach(q => {
-                if (document.querySelector(`input[name="q_${q.id}"]:checked`)) {
-                    answered++;
-                }
+                if (document.querySelector(`input[name="q_${q.id}"]:checked`)) answered++;
             });
-
             const pct = Math.round((answered / 24) * 100);
             document.getElementById('progress-bar').style.width = `${pct}%`;
             document.getElementById('progress-percentage').innerText = `${pct}% (${answered}/24)`;
         }
 
-        // Modal Guide Functions
-        function openGuideModal() {
-            document.getElementById('guide-modal').classList.remove('hidden');
-        }
+        function openGuideModal() { document.getElementById('guide-modal').classList.remove('hidden'); }
+        function closeGuideModal() { document.getElementById('guide-modal').classList.add('hidden'); }
 
-        function closeGuideModal() {
-            document.getElementById('guide-modal').classList.add('hidden');
-        }
-
-        function switchGuideTab(platform) {
-            const tabAndroid = document.getElementById('tab-android');
-            const tabIos = document.getElementById('tab-ios');
-            const guideAndroid = document.getElementById('guide-android');
-            const guideIos = document.getElementById('guide-ios');
-
-            if (platform === 'android') {
-                tabAndroid.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-sky-600 text-sky-700 bg-white";
-                tabIos.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
-                guideAndroid.classList.remove('hidden');
-                guideIos.classList.add('hidden');
-            } else {
-                tabIos.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-sky-600 text-sky-700 bg-white";
-                tabAndroid.className = "flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
-                guideIos.classList.remove('hidden');
-                guideAndroid.classList.add('hidden');
-            }
-        }
-
-        // Cálculo de Resultados
-        function calculateResults() {
-            let scoreDim1 = 0;
-            let scoreDim2 = 0;
-            let totalScore = 0;
+        function finalizeAndSubmit() {
             let allAnswered = true;
+            let summaryText = "RESPUESTAS CUESTIONARIO CUCRA-24:\n\n";
 
             questionsCUCRA.forEach(q => {
-                const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
-                if (selected) {
-                    const val = parseInt(selected.value, 10);
-                    if (q.dim === 1) scoreDim1 += val;
-                    if (q.dim === 2) scoreDim2 += val;
-                } else {
-                    allAnswered = false;
-                }
+                const sel = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (!sel) allAnswered = false;
+                else summaryText += `${q.id}. Valor: ${sel.value}\n`;
             });
 
             if (!allAnswered) {
-                alert('Por favor responda los 24 ítems del cuestionario antes de procesar.');
+                alert('Por favor responda todos los 24 ítems.');
                 return;
             }
 
-            const hrs = document.getElementById('useHours').value;
-            const mins = document.getElementById('useMinutes').value;
+            const hrsToday = document.getElementById('useHoursToday').value;
+            const minsToday = document.getElementById('useMinutesToday').value;
+            const hrsWeek = document.getElementById('useHoursWeek').value;
+            const minsWeek = document.getElementById('useMinutesWeek').value;
 
-            if (hrs === '' || mins === '') {
-                alert('Por favor ingrese el tiempo de uso diario del celular (Horas y Minutos).');
+            if (hrsToday === '' || minsToday === '' || hrsWeek === '' || minsWeek === '') {
+                alert('Por favor complete las preguntas de tiempo de uso (día y semana).');
                 return;
             }
 
-            totalScore = scoreDim1 + scoreDim2;
-
-            // Datos Personales
             const name = document.getElementById('fullName').value;
             const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
             const cycle = document.getElementById('academicCycle').value;
+            const phone = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('userEmail').value;
 
-            document.getElementById('res-name').innerText = name;
-            document.getElementById('res-age-cycle').innerText = `${age} años | ${cycle}° Ciclo`;
-            document.getElementById('res-screen-time').innerText = `${hrs} hrs ${mins} min / día`;
+            document.getElementById('pdf-name').innerText = name;
+            document.getElementById('pdf-age-gender').innerText = `${age} años | ${gender}`;
+            document.getElementById('pdf-cycle').innerText = `${cycle}° Ciclo`;
+            document.getElementById('pdf-contact').innerText = `${phone} | ${email}`;
+            document.getElementById('pdf-use-today').innerText = `${hrsToday}h ${minsToday}m`;
+            document.getElementById('pdf-use-week').innerText = `${hrsWeek}h ${minsWeek}m`;
 
-            document.getElementById('total-score').innerText = `${totalScore} / 120`;
-            document.getElementById('dim1-score').innerText = `${scoreDim1} / 60`;
-            document.getElementById('dim2-score').innerText = `${scoreDim2} / 60`;
-
-            // Interpretación del puntaje
-            let levelBadge = document.getElementById('score-level-badge');
-            let interpText = document.getElementById('interpretation-text');
-
-            if (totalScore <= 48) {
-                levelBadge.innerText = "Uso Leve / Rendimiento Óptimo";
-                levelBadge.className = "inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-emerald-100 text-emerald-800";
-                interpText.innerText = "El estudiante presenta un uso autorregulado y saludable del teléfono celular, registrando una interferencia mínima o nula en su formación académica en Fisioterapia.";
-            } else if (totalScore <= 84) {
-                levelBadge.innerText = "Uso Moderado / Riesgo de Interferencia";
-                levelBadge.className = "inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-amber-100 text-amber-800";
-                interpText.innerText = "El estudiante demuestra hábitos de uso del celular que ocasionalmente interfieren con la atención en clases y tareas universitarias. Se sugiere implementar estrategias de higiene digital y regulación del tiempo en pantalla.";
-            } else {
-                levelBadge.innerText = "Uso Severo / Alto Riesgo de Adicción Digital";
-                levelBadge.className = "inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full w-fit bg-rose-100 text-rose-800";
-                interpText.innerText = "Se identifica un patrón dependiente del uso del móvil con afectación considerable en la concentración, hábitos de descanso y rendimiento académico. Se aconseja consejería psicopedagógica y desintoxicación digital.";
-            }
-
-            // Mostrar contenedor de resultados
-            const resContainer = document.getElementById('results-container');
-            resContainer.classList.remove('hidden');
-            resContainer.scrollIntoView({ behavior: 'smooth' });
-
-            // Guardar en LocalStorage
-            saveToLocalStorage({
-                name, age, cycle, screenTime: `${hrs}h ${mins}m`, scoreDim1, scoreDim2, totalScore, timestamp: new Date().toISOString()
-            });
-        }
-
-        // Exportar a CSV
-        function exportCSV() {
-            const name = document.getElementById('fullName').value || 'Estudiante';
-            const age = document.getElementById('age').value || '';
-            const cycle = document.getElementById('academicCycle').value || '';
-            const hrs = document.getElementById('useHours').value || '0';
-            const mins = document.getElementById('useMinutes').value || '0';
-            
-            let dim1 = 0, dim2 = 0;
+            const pdfAnswers = document.getElementById('pdf-answers-list');
+            pdfAnswers.innerHTML = '';
             questionsCUCRA.forEach(q => {
-                const sel = document.querySelector(`input[name="q_${q.id}"]:checked`);
-                if (sel) {
-                    if (q.dim === 1) dim1 += parseInt(sel.value);
-                    if (q.dim === 2) dim2 += parseInt(sel.value);
-                }
+                const val = document.querySelector(`input[name="q_${q.id}"]:checked`).value;
+                pdfAnswers.innerHTML += `<p><strong>Ítem ${q.id}:</strong> Opción: ${val}</p>`;
             });
 
-            const rows = [
-                ["Estudiante", "Edad", "Ciclo", "Tiempo Uso Diario", "Dimensión 1 (Uso)", "Dimensión 2 (Rendimiento)", "Puntaje Total CUCRA-24", "Fecha"],
-                [name, age, cycle, `${hrs}h ${mins}m`, dim1, dim2, dim1 + dim2, new Date().toLocaleString()]
-            ];
+            const element = document.getElementById('pdf-template');
+            element.classList.remove('hidden');
+            html2pdf().from(element).save(`CUCRA24_${name.replace(/\s+/g, '_')}.pdf`).then(() => {
+                element.classList.add('hidden');
+            });
 
-            let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `CUCRA24_${name.replace(/\s+/g, '_')}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const mailSubject = encodeURIComponent(`Respuestas CUCRA-24 - ${name}`);
+            const mailBody = encodeURIComponent(
+                `DATOS GENERALES:\nNombre: ${name}\nEdad: ${age}\nSexo: ${gender}\nCiclo: ${cycle}\nCelular: ${phone}\nCorreo: ${email}\n\n` +
+                `TIEMPO DE USO:\nHoy: ${hrsToday}h ${minsToday}m\nSemana: ${hrsWeek}h ${minsWeek}m\n\n` +
+                summaryText
+            );
+            window.location.href = `mailto:kathyarequena8@gmail.com?subject=${mailSubject}&body=${mailBody}`;
+
+            showThanksView();
         }
 
-        function saveToLocalStorage(data) {
-            let records = JSON.parse(localStorage.getItem('cucra24_records') || '[]');
-            records.push(data);
-            localStorage.setItem('cucra24_records', JSON.stringify(records));
+        function showThanksView() {
+            document.getElementById('section-1').classList.add('hidden');
+            document.getElementById('section-2').classList.add('hidden');
+            document.getElementById('section-3').classList.add('hidden');
+            document.getElementById('nav-steps').classList.add('hidden');
+            document.getElementById('thanks-section').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
